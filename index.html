@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+
+  <body>  
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+
+
+
+<!-- THIS IS CONSIDERED THE CLIENT SIDE OF THE SOCKET. IT IS BASICALLY HOW THE USER INTERACTS AND WHERE THINGS ARe TOLD TO DISPLAY? -->
+    <!-- START HERE REQUIRED FOR SOCKET MUST BE PUT RIGHT BEFORE THE CLOSING BODY TAG OR SOCKET WILL OPEN AND CLOSE AND WON"T WORK PROPERLY-->
+    <!-- the below lines are required to use socket.io -->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+
+    <!-- to require jquery library -->
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <!-- Notice that I’m not specifying any URL when I call io() below, since it defaults to trying to connect to the host that serves the page. -->
+    <script>
+      var socket = io();
+      // says find the form on submit button press run this function
+      $('form').submit(function(){
+     
+      // sorta the same thing as socket.send but you can send a custom event. see explanation here: http://stackoverflow.com/questions/11498508/socket-emit-vs-socket-send
+      // basically with .send you could only call the function with .on("message"). where with socket.emit you can call the function with any arbitrary word like in this case "chat message". 
+      // chat message is the "name" of the message kinda like the name written on a jar of jelly beans and anything after the "," are the jellybeans that are being transfered to the client. and in this case it is the value of what is in the input box in the form below
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+    socket.on('chat message', function(msg){
+    $('#messages').append($('<li>').text(msg));
+    });
+    </script>
+    <!-- END HERE REQUIRED FOR SOCKET -->
+
+
+  </body>
+</html>
